@@ -1,54 +1,80 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>王子銓 | WANG TZU-CHUAN Portfolio</title>
-    <style>
-        :root {
-            --primary-dark: #1a1a1a;
-            --accent-blue: #0984e3;
-            --bg-light: #f4f7f6;
+<style>
+    :root {
+        --primary-dark: #1a1a1a;
+        --accent-blue: #0984e3;
+        --bg-light: #f4f7f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang TC', 'Heiti TC', sans-serif; }
+    body { line-height: 1.8; color: var(--primary-dark); scroll-behavior: smooth; background: #fff; }
+
+    /* 導覽列 */
+    nav {
+        position: fixed; top: 0; width: 100%; padding: 15px 8%;
+        background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+        display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    nav a { text-decoration: none; color: var(--primary-dark); font-weight: 500; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
+
+    /* 手機版核心優化設定 - 修正跑版關鍵 */
+    @media (max-width: 600px) {
+        nav { padding: 10px 5%; }
+        nav div:first-child { font-size: 0.8rem; } /* 縮小 LOGO 文字避免重疊 */
+        nav a { margin-left: 10px; font-size: 0.8rem; }
+
+        header { height: 50vh !important; }
+        header h1 { font-size: 2rem !important; letter-spacing: 5px !important; }
+
+        /* 強制三併排，解決圖面跑掉 */
+        .hero-gallery { 
+            grid-template-columns: repeat(3, 1fr) !important; 
+            gap: 8px !important; 
+            padding: 20px 4% !important; 
+        }
+        .gallery-item { aspect-ratio: 1/1 !important; } /* 手機版改為正方形較整齊 */
+        .location-tag { 
+            font-size: 0.5rem !important; 
+            padding: 2px 4px !important; 
+            bottom: 5px !important; 
+            left: 5px !important; 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang TC', 'Heiti TC', sans-serif; }
-        body { line-height: 1.8; color: var(--primary-dark); scroll-behavior: smooth; background: #fff; }
-
-        /* 導覽列 */
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 15px 8%;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        nav a { text-decoration: none; color: var(--primary-dark); font-weight: 500; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
-
+        .about-grid { grid-template-columns: 1fr !important; gap: 30px !important; padding: 40px 8% !important; }
+        .portfolio-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+        .modal-container { width: 95% !important; padding: 20px !important; margin: 20px auto !important; }
+    }
         /* Header */
-        header {
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hero-bg.jpg') center/cover no-repeat fixed;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
-        }
-        header h1 { font-size: 3.5rem; letter-spacing: 12px; margin-bottom: 10px; }
-        header p { font-size: 1.2rem; letter-spacing: 4px; opacity: 0.9; }
+header {
+        height: 60vh;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hero-bg.jpg') center/cover no-repeat fixed;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+    }
+    header h1 { font-size: 3.5rem; letter-spacing: 12px; margin-bottom: 10px; }
+    header p { font-size: 1.2rem; letter-spacing: 4px; opacity: 0.9; }
 
-        /* 首頁補充照片 + 曾經走過的地方 */
-        .hero-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 40px 8%; background: #fff; }
-        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; aspect-ratio: 16/9; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .gallery-item:hover img { transform: scale(1.1); filter: brightness(70%); }
-        .location-tag {
-            position: absolute; bottom: 15px; left: 15px; color: white;
-            background: rgba(0,0,0,0.5); padding: 5px 12px; font-size: 0.8rem;
-            border-radius: 4px; pointer-events: none; letter-spacing: 1px;
-        }
+    /* 首頁補充照片 */
+    .hero-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 40px 8%; background: #fff; }
+    .gallery-item { position: relative; overflow: hidden; border-radius: 8px; aspect-ratio: 16/9; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .gallery-item:hover img { transform: scale(1.1); filter: brightness(70%); }
+    .location-tag {
+        position: absolute; bottom: 15px; left: 15px; color: white;
+        background: rgba(0,0,0,0.5); padding: 5px 12px; font-size: 0.8rem;
+        border-radius: 4px; pointer-events: none; letter-spacing: 1px;
+    }
 
-        /* 關於我與專業區塊 */
-        #about { padding: 80px 15%; background: var(--bg-light); }
-        .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 50px; align-items: start; }
-        .about-avatar { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .school-info { font-weight: bold; color: #555; margin-bottom: 15px; display: block; }
-        .ai-tag { display: inline-block; padding: 5px 15px; background: #e8f4fd; color: var(--accent-blue); border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin: 15px 0; }
+    /* 關於我 */
+    #about { padding: 80px 15%; background: var(--bg-light); }
+    .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 50px; align-items: start; }
+    .about-avatar { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
         /* 技能條 */
         .skills-box { margin-top: 30px; }
@@ -253,7 +279,49 @@
         <div class="contact-links"><a href="mailto:billwang9088@gmail.com">Email:billwang9088@gmail.com</a><a href="https://www.instagram.com/cr_bt54" target="_blank">Instagram:cr_bt54</a></div>
     </section>
 
-    <footer><p>&copy; 2026 王子銓 WANG TZU-CHUAN. 版權所有 翻版必究</p></footer>
+    <footer style="padding: 60px 20px; text-align: center; background: #fff; border-top: 1px solid #eee;">
+    <div style="margin-bottom: 15px;">
+        <p style="font-weight: bold; color: var(--primary-dark); font-size: 1.1rem;">正修科技大學 五專部建築科</p>
+        <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Kaohsiung, Taiwan | Architecture Student</p>
+    </div>
+    <p style="font-size: 0.8rem; color: #bbb; letter-spacing: 1px;">
+        &copy; 2026 王子銓 WANG TZU-CHUAN. All Rights Reserved.
+    </p>
+</footer>
+
+<div class="mobile-action-bar">
+    <a href="mailto:billwang9088@gmail.com">📧 Email 聯絡</a>
+    <a href="https://www.instagram.com/cr_bt54" target="_blank">📸 Instagram</a>
+</div>
+
+<style>
+    @media (max-width: 600px) {
+        .mobile-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-top: 1px solid #ddd;
+            z-index: 9999;
+        }
+        .mobile-action-bar a {
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+        .mobile-action-bar a:first-child { border-right: 1px solid #eee; }
+        body { padding-bottom: 60px !important; } 
+    }
+    @media (min-width: 601px) {
+        .mobile-action-bar { display: none; }
+    }
+</style>
 
     <script>
         function openSliderModal(id) { document.getElementById(id).style.display = "block"; document.body.style.overflow = "hidden"; }
