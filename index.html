@@ -107,20 +107,43 @@
         .cat-drawing { color: var(--tag-drawing); }
         .cat-collab { color: var(--tag-collab); }
 
-        /* 彈窗排版 */
+        /* --- 彈窗與圖片放大功能 --- */
         .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
         .modal-container { background: white; width: 90%; max-width: 1000px; margin: 50px auto; padding: 40px; border-radius: 15px; position: relative; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h2 { font-size: 1.8rem; border-left: 5px solid var(--accent-blue); padding-left: 15px; }
 
         .slider-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; border-radius: 8px; margin-bottom: 25px; }
-        .slider-img { width: 100%; height: 100%; object-fit: contain; display: none; }
+        
+        /* 修改：增加 cursor: zoom-in 提示可放大 */
+        .slider-img { width: 100%; height: 100%; object-fit: contain; display: none; cursor: zoom-in; } 
         .slider-img.active { display: block; }
+        
         .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; width: 45px; height: 45px; border: none; cursor: pointer; border-radius: 50%; font-size: 1.5rem; transition: 0.3s; }
         .nav-arrow:hover { background: var(--accent-blue); }
         .prev { left: 15px; } .next { right: 15px; }
         .modal-desc-footer { font-size: 1.1rem; color: #444; border-top: 1px solid #eee; padding-top: 20px; text-align: justify; }
         .close-btn { font-size: 40px; cursor: pointer; color: #999; border: none; background: none; }
+
+        /* --- 全螢幕放大檢視 (Lightbox) --- */
+        #fullscreen-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 9999; 
+            justify-content: center; align-items: center;
+        }
+        #fullscreen-img { max-width: 95%; max-height: 95%; object-fit: contain; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .fullscreen-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; cursor: pointer; opacity: 0.8; }
+        .fullscreen-close:hover { opacity: 1; }
+
+        /* --- 查看更多按鈕樣式 --- */
+        .view-more-container { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px dashed #ddd; }
+        .view-more-btn {
+            display: inline-block; padding: 15px 40px; background: transparent; 
+            border: 2px solid var(--accent-blue); color: var(--accent-blue);
+            font-size: 1.1rem; font-weight: bold; border-radius: 50px; text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .view-more-btn:hover { background: var(--accent-blue); color: white; transform: scale(1.05); box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3); }
 
         /* 聯絡區塊 (Desktop) */
         #contact { text-align: center; padding: 80px 0; background: var(--bg-light); }
@@ -162,6 +185,11 @@
     </style>
 </head>
 <body>
+
+    <div id="fullscreen-modal" onclick="closeFullscreen()">
+        <span class="fullscreen-close">&times;</span>
+        <img id="fullscreen-img" src="" alt="Fullscreen View">
+    </div>
 
     <nav>
         <div style="font-weight: 800; letter-spacing: 2px;">WANG TZU-CHUAN</div>
@@ -271,8 +299,8 @@
             <div class="portfolio-item-frame" data-category="drawing" onclick="openSliderModal('p7')">
                 <div class="frame-image"><img src="p7-cover.jpg"></div>
                 <div class="frame-info-card">
-                    <div class="project-title" data-i18n="p7_title">07. 待填</div>
-                    <div class="project-category" data-i18n="p7_cat">建築作品 / 概念提案</div>
+                    <div class="project-title" data-i18n="p7_title">07. 工程圖 製圖</div>
+                    <div class="project-category" data-i18n="p7_cat">建築製圖 / 案例臨摹</div>
                 </div>
             </div>
 
@@ -285,13 +313,20 @@
             </div>
 
         </div>
+
+        <div class="view-more-container">
+            <a href="https://billwang9088-max.github.io/zih/" target="_blank" class="view-more-btn" data-i18n="btn_view_more">查看更多作品 / View More</a>
+        </div>
+
     </section>
 
     <div id="p1" class="modal">
         <div class="modal-container">
             <div class="modal-header"><h2 data-i18n="p1_title">時光行</h2><button class="close-btn" onclick="closeSliderModal('p1')">&times;</button></div>
             <div class="slider-wrap">
-                <img src="p1-1.jpg" class="slider-img active"><img src="p1-2.jpg" class="slider-img"><img src="p1-3.jpg" class="slider-img">
+                <img src="p1-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p1-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p1-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
                 <button class="nav-arrow prev" onclick="changeSlide('p1', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p1', 1)">&#10095;</button>
             </div>
             <p class="modal-desc-footer" data-i18n="p1_desc">前往了解歐洲古文明，旅行模擬現代穿縮過去，讓每站旅行像回到過去，讓人體驗多元豐富的歷史文化。</p>
@@ -301,56 +336,126 @@
     <div id="p2" class="modal">
         <div class="modal-container">
             <div class="modal-header"><h2 data-i18n="p2_title">空間體驗進行曲</h2><button class="close-btn" onclick="closeSliderModal('p2')">&times;</button></div>
-            <div class="slider-wrap"><img src="p2-1.jpg" class="slider-img active"><img src="p2-2.jpg" class="slider-img"><img src="p2-3.jpg" class="slider-img"><img src="p2-4.jpg" class="slider-img"><img src="p2-5.jpg" class="slider-img"><img src="p2-6.jpg" class="slider-img"><img src="p2-7.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('p2', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p2', 1)">&#10095;</button></div>
+            <div class="slider-wrap">
+                <img src="p2-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p2-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p2-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p2-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p2-5.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p2-6.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p2-7.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p2', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p2', 1)">&#10095;</button>
+            </div>
             <div class="modal-desc-footer"><p data-i18n="p2_desc">用材質與量體去營造環境氛圍，控制光線，與人視野，讓進入著可以沉醉空間體驗空間。</p><a href="project2.pptx" class="download-btn" download style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" data-i18n="download_ppt">📁 下載專案簡報</a></div>
         </div>
     </div>
 
-    <div id="p3" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p3_title">古建築背包客之旅</h2><button class="close-btn" onclick="closeSliderModal('p3')">&times;</button></div><div class="slider-wrap"><img src="p3-1.jpg" class="slider-img active"><img src="p3-2.jpg" class="slider-img"><img src="p3-3.jpg" class="slider-img"><img src="p3-4.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('p3', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p3', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p3_desc">以人去行走，體驗家鄉風土人情。</p></div></div>
-    
-    <div id="p4" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p4_title">AutoCAD之住宅自觀</h2><button class="close-btn" onclick="closeSliderModal('p4')">&times;</button></div><div class="slider-wrap"><img src="p4-1.jpg" class="slider-img active"><img src="p4-2.jpg" class="slider-img"><img src="p4-3.jpg" class="slider-img"><img src="p4-4.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('p4', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p4', 1)">&#10095;</button></div><div class="modal-desc-footer"><p data-i18n="p4_desc">以 AutoCAD 專業工具，自行觀察家中細節製圖輸出。</p><a href="project4.pptx" class="download-btn" download style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" data-i18n="download_ppt">📁 下載專案簡報</a></div></div></div>
-    
-    <div id="p5" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p5_title">建築師工作室設計</h2><button class="close-btn" onclick="closeSliderModal('p5')">&times;</button></div><div class="slider-wrap"><img src="p5-1.jpg" class="slider-img active"><img src="p5-2.jpg" class="slider-img"><img src="p5-3.jpg" class="slider-img"><img src="p5-4.jpg" class="slider-img"><img src="p5-5.jpg" class="slider-img"><img src="p5-6.jpg" class="slider-img"><img src="p5-7.jpg" class="slider-img"> <button class="nav-arrow prev" onclick="changeSlide('p5', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p5', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p5_desc">以休息為主軸，修剪量體，確保每層樓都有休息區域。</p></div></div>
-    <div id="p6" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p6_title">休憩建築設計</h2><button class="close-btn" onclick="closeSliderModal('p6')">&times;</button></div><div class="slider-wrap"><img src="p6-1.jpg" class="slider-img active"><img src="p6-2.jpg" class="slider-img"><img src="p6-3.jpg" class="slider-img"><img src="p6-4.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('p6', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p6', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p6_desc">以人為型，以人形發展量體，以需求規劃空間。</p></div></div>
-    <div id="p7" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p7_title">建築設計作品</h2><button class="close-btn" onclick="closeSliderModal('p7')">&times;</button></div><div class="slider-wrap"><img src="p7-1.jpg" class="slider-img active"><img src="p7-2.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('p7', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p7', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p7_desc">設計理念：說明本案的量體組合或是材質運用，如何與周邊環境產生對話。</p></div></div>
-<div id="p8" class="modal">
-    <div class="modal-container" style="max-width: 1200px;">
-        
-        <div class="modal-header">
-            <h2 data-i18n="p8_title">團隊協作項目:基地調查</h2>
-            <button class="close-btn" onclick="closeSliderModal('p8')">&times;</button>
-        </div>
-        
-        <div class="slider-wrap" style="height: 70vh; padding-bottom: 0; background: #333;">
-            <iframe src="project8.pdf#toolbar=0&view=FitH" width="100%" height="100%" style="border: none;">
-                您的瀏覽器不支援 PDF 預覽，請點擊下方按鈕下載查看。
-            </iframe>
-        </div>
-
-        <div class="modal-desc-footer" style="padding: 20px; text-align: left;">
-            
-            <div style="margin-bottom: 15px; border-left: 4px solid var(--accent-blue); padding-left: 10px;">
-                <p data-i18n="p8_desc" style="margin: 0 0 5px 0;"><strong>設計理念：</strong>周遭範圍之基地調查，分析報告</p>
-                <p style="margin: 0; color: #555;"><strong>協作者：</strong>廖和風</p>
+    <div id="p3" class="modal">
+        <div class="modal-container">
+            <div class="modal-header"><h2 data-i18n="p3_title">古建築背包客之旅</h2><button class="close-btn" onclick="closeSliderModal('p3')">&times;</button></div>
+            <div class="slider-wrap">
+                <img src="p3-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p3-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p3-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p3-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p3', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p3', 1)">&#10095;</button>
             </div>
-
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                
-                <a href="https://evacresponse-mqcctmas.manus.space/about" target="_blank" style="text-decoration: none; background-color: #28a745; color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;">
-                    🌐 瀏覽 EvacResponse 網站
-                </a>
-
-                <a href="project8.pdf" download class="download-btn" style="text-decoration: none; background: var(--accent-blue); color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;" data-i18n="download_ppt">
-                    📁 下載完整 PDF (31頁)
-                </a>
-            </div>
-
+            <p class="modal-desc-footer" data-i18n="p3_desc">以人去行走，體驗家鄉風土人情。</p>
         </div>
     </div>
-</div>
-    <div id="m2025" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2025')">&times;</button><h2 data-i18n="honor_2025">2025 榮譽證明</h2><div class="slider-wrap"><img src="2025-award.jpg" class="slider-img active"></div></div></div>
-    <div id="m2024" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2024')">&times;</button><h2 data-i18n="honor_2024">2024 證明 (5張)</h2><div class="slider-wrap"><img src="2024-1.jpg" class="slider-img active"><img src="2024-2.jpg" class="slider-img"><img src="2024-3.jpg" class="slider-img"><img src="2024-4.jpg" class="slider-img"><img src="2024-5.jpg" class="slider-img"><button class="nav-arrow prev" onclick="changeSlide('m2024', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('m2024', 1)">&#10095;</button></div></div></div>
-    <div id="m-violin" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m-violin')">&times;</button><h2 data-i18n="honor_violin">小提琴檢定證書</h2><div class="slider-wrap"><img src="violin-10.jpg" class="slider-img active"></div></div></div>
+    
+    <div id="p4" class="modal">
+        <div class="modal-container">
+            <div class="modal-header"><h2 data-i18n="p4_title">AutoCAD之住宅自觀</h2><button class="close-btn" onclick="closeSliderModal('p4')">&times;</button></div>
+            <div class="slider-wrap">
+                <img src="p4-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p4-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p4-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p4-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p4', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p4', 1)">&#10095;</button>
+            </div>
+            <div class="modal-desc-footer"><p data-i18n="p4_desc">以 AutoCAD 專業工具，自行觀察家中細節製圖輸出。</p><a href="project4.pptx" class="download-btn" download style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" data-i18n="download_ppt">📁 下載專案簡報</a></div>
+        </div>
+    </div>
+    
+    <div id="p5" class="modal">
+        <div class="modal-container">
+            <div class="modal-header"><h2 data-i18n="p5_title">建築師工作室設計</h2><button class="close-btn" onclick="closeSliderModal('p5')">&times;</button></div>
+            <div class="slider-wrap">
+                <img src="p5-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p5-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p5-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p5-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p5-5.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p5-6.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p5-7.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p5', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p5', 1)">&#10095;</button>
+            </div>
+            <p class="modal-desc-footer" data-i18n="p5_desc">以休息為主軸，修剪量體，確保每層樓都有休息區域。</p>
+        </div>
+    </div>
+
+    <div id="p6" class="modal">
+        <div class="modal-container">
+            <div class="modal-header"><h2 data-i18n="p6_title">休憩建築設計</h2><button class="close-btn" onclick="closeSliderModal('p6')">&times;</button></div>
+            <div class="slider-wrap">
+                <img src="p6-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p6-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p6-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p6-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p6', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p6', 1)">&#10095;</button>
+            </div>
+            <p class="modal-desc-footer" data-i18n="p6_desc">以人為型，以人形發展量體，以需求規劃空間。</p>
+        </div>
+    </div>
+
+    <div id="p7" class="modal">
+        <div class="modal-container">
+            <div class="modal-header"><h2 data-i18n="p7_title">建築設計作品</h2><button class="close-btn" onclick="closeSliderModal('p7')">&times;</button></div>
+            <div class="slider-wrap">
+                <img src="p7-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
+                <img src="p7-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p7-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <img src="p7-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
+                <button class="nav-arrow prev" onclick="changeSlide('p7', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p7', 1)">&#10095;</button>
+            </div>
+            <p class="modal-desc-footer" data-i18n="p7_desc">建築製圖，建築工程案例臨摹，實務學習。</p>
+        </div>
+    </div>
+
+    <div id="p8" class="modal">
+        <div class="modal-container" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h2 data-i18n="p8_title">團隊協作項目:基地調查</h2>
+                <button class="close-btn" onclick="closeSliderModal('p8')">&times;</button>
+            </div>
+            
+            <div class="slider-wrap" style="height: 70vh; padding-bottom: 0; background: #333;">
+                <iframe src="project8.pdf#toolbar=0&view=FitH" width="100%" height="100%" style="border: none;">
+                    您的瀏覽器不支援 PDF 預覽，請點擊下方按鈕下載查看。
+                </iframe>
+            </div>
+
+            <div class="modal-desc-footer" style="padding: 20px; text-align: left;">
+                <div style="margin-bottom: 15px; border-left: 4px solid var(--accent-blue); padding-left: 10px;">
+                    <p data-i18n="p8_desc" style="margin: 0 0 5px 0;"><strong>設計理念：</strong>周遭範圍之基地調查，分析報告</p>
+                    <p style="margin: 0; color: #555;"><strong>協作者：</strong>廖和風</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <a href="https://evacresponse-mqcctmas.manus.space/about" target="_blank" style="text-decoration: none; background-color: #28a745; color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;">
+                        🌐 瀏覽 EvacResponse 網站
+                    </a>
+                    <a href="project8.pdf" download class="download-btn" style="text-decoration: none; background: var(--accent-blue); color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;" data-i18n="download_ppt">
+                        📁 下載完整 PDF (31頁)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="m2025" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2025')">&times;</button><h2 data-i18n="honor_2025">2025 榮譽證明</h2><div class="slider-wrap"><img src="2025-award.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div></div>
+    <div id="m2024" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2024')">&times;</button><h2 data-i18n="honor_2024">2024 證明 (5張)</h2><div class="slider-wrap"><img src="2024-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="2024-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-5.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('m2024', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('m2024', 1)">&#10095;</button></div></div></div>
+    <div id="m-violin" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m-violin')">&times;</button><h2 data-i18n="honor_violin">小提琴檢定證書</h2><div class="slider-wrap"><img src="violin-10.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div></div>
 
     <section id="contact">
         <h2 class="section-title" data-i18n="nav_contact">聯絡我 Contact</h2>
@@ -381,6 +486,18 @@
         function openSliderModal(id) { document.getElementById(id).style.display = "block"; document.body.style.overflow = "hidden"; }
         function closeSliderModal(id) { document.getElementById(id).style.display = "none"; document.body.style.overflow = "auto"; }
 
+        // --- 新增：全螢幕放大圖片功能 ---
+        function openFullscreen(src) {
+            const modal = document.getElementById('fullscreen-modal');
+            const img = document.getElementById('fullscreen-img');
+            img.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function closeFullscreen() {
+            document.getElementById('fullscreen-modal').style.display = 'none';
+        }
+
         function changeSlide(modalId, direction) {
             const modal = document.getElementById(modalId);
             const imgs = modal.getElementsByClassName('slider-img');
@@ -398,12 +515,10 @@
 
         // --- 分類篩選功能 ---
         function filterPortfolio(category) {
-            // 1. 更新按鈕狀態
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // 2. 篩選項目
             const items = document.querySelectorAll('.portfolio-item-frame');
             items.forEach(item => {
                 if (category === 'all' || item.getAttribute('data-category') === category) {
@@ -443,7 +558,8 @@
                 download_ppt: "📁 下載專案簡報",
                 honor_2025: "2025 榮譽證明", honor_2024: "2024 證明 (5張)", honor_violin: "小提琴檢定證書",
                 footer_school: "正修科技大學 五專部建築科", footer_thanks: "感謝：和風技術指導",
-                btn_email: "📧 Email 聯絡", btn_ig: "📸 Instagram"
+                btn_email: "📧 Email 聯絡", btn_ig: "📸 Instagram",
+                btn_view_more: "查看更多作品 / View More"
             },
             "en": {
                 nav_about: "About", nav_portfolio: "Portfolio", nav_contact: "Contact",
@@ -472,7 +588,8 @@
                 download_ppt: "📁 Download PPT",
                 honor_2025: "2025 Honors", honor_2024: "2024 Certs (5)", honor_violin: "Violin Certificate",
                 footer_school: "Cheng Shiu University - Architecture Dept.", footer_thanks: "Special Thanks: Hefeng Tech Guidance",
-                btn_email: "📧 Email Me", btn_ig: "📸 Instagram"
+                btn_email: "📧 Email Me", btn_ig: "📸 Instagram",
+                btn_view_more: "View More"
             }
         };
 
