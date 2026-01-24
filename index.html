@@ -10,167 +10,246 @@
             --primary-dark: #1a1a1a;
             --accent-blue: #0984e3;
             --bg-light: #f4f7f6;
+            --text-serif: 'Times New Roman', Times, serif; 
             --tag-drawing: #e67e22;
             --tag-collab: #27ae60;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang TC', 'Heiti TC', sans-serif; }
-        body { line-height: 1.8; color: var(--primary-dark); scroll-behavior: smooth; background: #fff; }
+        
+        img { max-width: 100%; height: auto; display: block; }
 
-        /* 導覽列 */
+        h1, h2, .stylish-title, .hero-title { font-family: var(--text-serif); }
+
+        body { line-height: 1.8; color: var(--primary-dark); scroll-behavior: smooth; background: #fff; overflow-x: hidden; /* 防止水平卷軸 */ }
+
+        /* --- 導覽列 --- */
         nav {
-            position: fixed; top: 0; width: 100%; padding: 15px 8%;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%; padding: 20px 8%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+            transition: 0.4s ease;
+        }
+        nav.scrolled {
+            background: rgba(255,255,255,0.98); 
+            padding: 15px 8%;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        nav a { text-decoration: none; color: var(--primary-dark); font-weight: 500; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
+        nav a, nav div { color: rgba(255,255,255,0.95); transition: 0.3s; }
+        nav.scrolled a, nav.scrolled div { color: var(--primary-dark) !important; }
+        nav a { text-decoration: none; font-weight: 500; margin-left: 20px; font-size: 0.9rem; letter-spacing: 1px; }
+        nav a:hover { color: var(--accent-blue) !important; }
         
-        /* 語言切換按鈕樣式 */
         .lang-btn {
-            background: var(--accent-blue); color: white; border: none; padding: 5px 15px; 
-            border-radius: 20px; font-size: 0.85rem; font-weight: bold; cursor: pointer; 
-            margin-left: 20px; transition: 0.3s;
+            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); 
+            padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; cursor: pointer; 
+            margin-left: 20px; transition: 0.3s; backdrop-filter: blur(5px);
         }
-        .lang-btn:hover { background: #076aad; }
+        .lang-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); color: white; }
+        nav.scrolled .lang-btn { background: var(--primary-dark); color: white; border-color: var(--primary-dark); }
+        nav.scrolled .lang-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
 
-        /* Header */
+        /* --- Header --- */
         header {
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hero-bg.jpg') center/cover no-repeat fixed;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero-bg.jpg') center/cover no-repeat fixed;
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+            text-align: left; padding-left: 10%; padding-right: 10%; color: white; position: relative;
         }
-        header h1 { font-size: 3.5rem; letter-spacing: 12px; margin-bottom: 10px; }
-        header p { font-size: 1.2rem; letter-spacing: 4px; opacity: 0.9; }
 
-        /* 首頁補充照片 */
-        .hero-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 40px 8%; background: #fff; }
-        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; aspect-ratio: 16/9; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .gallery-item:hover img { transform: scale(1.1); filter: brightness(70%); }
+        .hero-content {
+            max-width: 900px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+            position: relative; z-index: 2;
+        }
+
+        .hero-tag {
+            font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 20px; border-left: 3px solid #fff; padding-left: 15px;
+            font-weight: 600; opacity: 0.9;
+        }
+
+        .hero-title { font-size: 4.8rem; line-height: 1.1; font-weight: normal; margin-bottom: 25px; }
+        .hero-title .cross { color: rgba(255,255,255,0.6); font-family: sans-serif; font-weight: 300; margin-right: 10px; font-size: 0.8em; }
+
+        .hero-desc { font-size: 1.15rem; line-height: 1.6; font-weight: 300; letter-spacing: 1px; opacity: 0.95; max-width: 650px; }
+
+        .scroll-hint {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            color: white; opacity: 0.8; animation: bounce 2s infinite; font-size: 0.9rem; letter-spacing: 2px;
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform:translateY(0) translateX(-50%);} 40% {transform:translateY(-10px) translateX(-50%);} 60% {transform:translateY(-5px) translateX(-50%);} }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 分區大標題 --- */
+        .section-header-wrap {
+            padding: 120px 10% 50px 10%;
+            display: flex; flex-direction: column; position: relative;
+        }
+        
+        .stylish-title {
+            font-size: 4rem; color: #e0e0e0; position: relative; line-height: 1; margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.5s;
+        }
+        
+        .stylish-title::before {
+            content: ""; display: block; width: 60px; height: 5px; 
+            background: var(--accent-blue); margin-bottom: 25px;
+        }
+
+        .stylish-title strong { color: var(--primary-dark); display: block; }
+        
+        .stylish-subtitle {
+            font-size: 0.9rem; color: #666; letter-spacing: 4px; font-weight: 700; 
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+
+        .align-right { text-align: right; align-items: flex-end; }
+        .align-right .stylish-title::before { margin-left: auto; margin-right: 0; }
+        .align-left { text-align: left; align-items: flex-start; }
+
+        /* --- 內容區塊 --- */
+        .hero-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 10% 80px 10%; }
+        .gallery-item { position: relative; overflow: hidden; height: 250px; border-radius: 8px; width: 100%; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
         .location-tag {
             position: absolute; bottom: 15px; left: 15px; color: white;
             background: rgba(0,0,0,0.5); padding: 5px 12px; font-size: 0.8rem;
             border-radius: 4px; pointer-events: none; letter-spacing: 1px;
         }
 
-        /* 關於我與專業區塊 */
-        #about { padding: 80px 15%; background: var(--bg-light); }
-        .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 50px; align-items: start; }
-        .about-avatar { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .school-info { font-weight: bold; color: #555; margin-bottom: 15px; display: block; }
-        .ai-tag { display: inline-block; padding: 5px 15px; background: #e8f4fd; color: var(--accent-blue); border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin: 15px 0; }
+        #about { background: #fff; padding-bottom: 80px; padding-top: 0; }
+        .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 60px; padding: 0 10%; align-items: start; }
+        .about-avatar { width: 100%; max-width: 300px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
+        .school-info { font-size: 1.1rem; color: #555; font-weight: bold; display: block; margin-bottom: 15px; letter-spacing: 1px; }
+        .about-desc { font-size: 1.05rem; color: #333; text-align: justify; margin-bottom: 20px; }
+        .ai-tag { display: inline-block; padding: 5px 15px; background: #e8f4fd; color: var(--accent-blue); border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin-bottom: 20px; }
+
+        .timeline-box { margin-top: 30px; background: #fff; border-radius: 10px; padding: 20px; border: 1px solid #eee; }
+        .event-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .view-btn { background: var(--primary-dark); color: white; padding: 4px 12px; border-radius: 20px; border: none; font-size: 0.75rem; cursor: pointer; }
+
         .skills-box { margin-top: 30px; }
         .skill-item { margin-bottom: 15px; }
         .skill-name { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; }
         .skill-bar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
         .skill-fill { height: 100%; background: var(--primary-dark); }
-        .timeline-box { margin-top: 30px; padding: 20px; background: #fff; border-radius: 10px; }
-        .event-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .view-btn { padding: 4px 12px; background: var(--primary-dark); color: white; border-radius: 20px; cursor: pointer; font-size: 0.75rem; }
 
-        /* 作品集樣式 */
-        #portfolio { padding: 80px 10%; }
-        .section-title { text-align: center; margin-bottom: 40px; font-size: 2rem; position: relative; padding-bottom: 10px; }
-        .section-title::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 50px; height: 3px; background: var(--accent-blue); }
+        /* --- 作品集 --- */
+        #portfolio { background: var(--bg-light); padding-bottom: 100px; padding-top: 0; }
         
-        /* --- 分類按鈕區 --- */
-        .filter-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-container { display: flex; justify-content: flex-start; gap: 15px; margin: 0 10% 40px 10%; flex-wrap: wrap; border-bottom: none; padding-bottom: 0; }
         .filter-btn {
             padding: 8px 20px; border: 1px solid #ddd; background: white; 
             border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #666; transition: 0.3s;
+            font-family: sans-serif; font-style: normal;
         }
         .filter-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
         .filter-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+        .filter-btn.active::after { display: none; }
 
-        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
-
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 40px; padding: 0 10%; }
+        
         .portfolio-item-frame { 
             border: 1px solid #ddd; background: #fff; padding: 15px; border-radius: 12px; 
             cursor: pointer; transition: all 0.3s ease;
-            animation: fadeIn 0.5s ease;
+            box-shadow: none; animation: fadeIn 0.5s ease;
         }
-        .portfolio-item-frame.hidden { display: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .portfolio-item-frame:hover { transform: translateY(-8px); border-color: var(--accent-blue); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-
-        .frame-image { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
-        .frame-image img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .portfolio-item-frame:hover .frame-image img { transform: scale(1.08); }
-
-        .frame-info-card { background: #f8f9fa; padding: 15px 20px; border-radius: 8px; border: 1px solid #eee; }
-        .project-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px; }
+        .portfolio-item-frame.hidden { display: none; }
+        
+        /* 圖片固定高度+完整顯示 */
+        .frame-image { 
+            width: 100%; height: 400px; 
+            background: #f8f9fa; border-radius: 8px; overflow: hidden; margin-bottom: 15px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .frame-image img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
+        .portfolio-item-frame:hover .frame-image img { transform: scale(1.05); }
+        
+        .frame-info-card { background: #f8f9fa; padding: 15px 20px; border-radius: 8px; border: 1px solid #eee; border-top: 1px solid #eee; }
+        .project-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px; font-family: sans-serif; }
         
         .project-category { font-size: 0.85rem; font-weight: 600; color: var(--accent-blue); display: flex; align-items: center; }
         .project-category::before { content: "●"; margin-right: 8px; font-size: 0.7rem; }
         .cat-drawing { color: var(--tag-drawing); }
         .cat-collab { color: var(--tag-collab); }
 
-        /* --- 彈窗與圖片放大功能 --- */
-        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
-        .modal-container { background: white; width: 90%; max-width: 1000px; margin: 50px auto; padding: 40px; border-radius: 15px; position: relative; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h2 { font-size: 1.8rem; border-left: 5px solid var(--accent-blue); padding-left: 15px; }
-
-        .slider-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; border-radius: 8px; margin-bottom: 25px; }
-        
-        /* 修改：增加 cursor: zoom-in 提示可放大 */
-        .slider-img { width: 100%; height: 100%; object-fit: contain; display: none; cursor: zoom-in; } 
-        .slider-img.active { display: block; }
-        
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; width: 45px; height: 45px; border: none; cursor: pointer; border-radius: 50%; font-size: 1.5rem; transition: 0.3s; }
-        .nav-arrow:hover { background: var(--accent-blue); }
-        .prev { left: 15px; } .next { right: 15px; }
-        .modal-desc-footer { font-size: 1.1rem; color: #444; border-top: 1px solid #eee; padding-top: 20px; text-align: justify; }
-        .close-btn { font-size: 40px; cursor: pointer; color: #999; border: none; background: none; }
-
-        /* --- 全螢幕放大檢視 (Lightbox) --- */
-        #fullscreen-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 9999; 
-            justify-content: center; align-items: center;
-        }
-        #fullscreen-img { max-width: 95%; max-height: 95%; object-fit: contain; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
-        .fullscreen-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; cursor: pointer; opacity: 0.8; }
-        .fullscreen-close:hover { opacity: 1; }
-
-        /* --- 查看更多按鈕樣式 --- */
         .view-more-container { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px dashed #ddd; }
         .view-more-btn {
             display: inline-block; padding: 15px 40px; background: transparent; 
             border: 2px solid var(--accent-blue); color: var(--accent-blue);
             font-size: 1.1rem; font-weight: bold; border-radius: 50px; text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease; letter-spacing: 0;
         }
         .view-more-btn:hover { background: var(--accent-blue); color: white; transform: scale(1.05); box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3); }
 
-        /* 聯絡區塊 (Desktop) */
-        #contact { text-align: center; padding: 80px 0; background: var(--bg-light); }
-        .contact-links { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-        .contact-links a { font-weight: bold; color: var(--primary-dark); text-decoration: none; border-bottom: 2px solid var(--accent-blue); padding-bottom: 3px; }
+        /* --- 聯絡區塊 --- */
+        #contact { background: #fff; color: #1a1a1a; padding-bottom: 100px; padding-top: 0; }
+        #contact .stylish-title strong { color: #1a1a1a; }
+        #contact .stylish-title { color: #eee; }
+        .contact-links { display: flex; justify-content: flex-end; gap: 30px; padding: 0 10%; font-family: sans-serif; font-size: 1rem; flex-wrap: wrap; }
+        .contact-links a { color: #1a1a1a; font-weight: bold; text-decoration: none; border-bottom: 2px solid var(--accent-blue); padding-bottom: 3px; transition: 0.3s; }
+        .contact-links a:hover { color: var(--accent-blue); }
 
-        footer { padding: 40px; text-align: center; font-size: 0.85rem; color: #888; }
-        @media (max-width: 850px) { .about-grid { grid-template-columns: 1fr; } }
+        footer { background: #fff; padding: 40px; text-align: center; font-size: 0.85rem; color: #888; border-top: 1px solid #eee; }
 
-        /* --- 手機版優化區 --- */
+        /* --- 彈窗樣式 --- */
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
+        .modal-container { background: white; width: 90%; max-width: 1000px; margin: 50px auto; padding: 40px; border-radius: 15px; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 2rem; border-left: 5px solid var(--accent-blue); padding-left: 15px; font-family: sans-serif; }
+        .slider-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; margin-bottom: 25px; border-radius: 8px; }
+        .slider-img { width: 100%; height: 100%; object-fit: contain; display: none; cursor: zoom-in; } 
+        .slider-img.active { display: block; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; width: 45px; height: 45px; border: none; cursor: pointer; font-size: 1.5rem; transition: 0.3s; border-radius: 50%; }
+        .nav-arrow:hover { background: var(--accent-blue); }
+        .prev { left: 15px; } .next { right: 15px; }
+        .modal-desc-footer { font-size: 1.1rem; color: #444; border-top: 1px solid #eee; padding-top: 20px; text-align: justify; }
+        .close-btn { font-size: 40px; cursor: pointer; color: #999; border: none; background: none; }
+        .download-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+
+        #fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; justify-content: center; align-items: center; }
+        #fullscreen-img { max-width: 95%; max-height: 95%; object-fit: contain; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .fullscreen-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; cursor: pointer; opacity: 0.8; }
+        .fullscreen-close:hover { opacity: 1; }
+
+        /* --- 手機版修復區 (關鍵修改) --- */
         @media (max-width: 600px) {
-            header h1 { font-size: 2.2rem !important; letter-spacing: 6px !important; }
+            header { padding-left: 8%; padding-right: 8%; }
+            .hero-title { font-size: 3.2rem; }
             
-            /* ✅ 手機版背景修復：取消 fixed，改為 scroll，避免背景跑掉 */
-            header { 
-                background-attachment: scroll !important; 
-                background-position: center center !important;
+            /* 修復標題過大導致溢出 */
+            .stylish-title { 
+                font-size: 2.2rem; /* 縮小字體 */
+                word-wrap: break-word; /* 長單字自動換行 */
+                line-height: 1.1;
             }
             
-            .contact-links { flex-direction: column; gap: 20px; padding: 0 20px; }
-            .contact-links a { display: block; font-size: 0.95rem; word-break: break-all; } 
-
-            .hero-gallery { grid-template-columns: 1fr !important; padding: 20px 5% !important; }
-            .about-grid { grid-template-columns: 1fr !important; padding: 40px 10% !important; }
-            .portfolio-grid { grid-template-columns: 1fr !important; }
-            .modal-container { width: 95% !important; padding: 20px !important; margin: 20px auto !important; }
+            .section-header-wrap { padding: 80px 5% 30px 5%; }
+            .portfolio-grid, .contact-links, .hero-gallery, .filter-container { padding: 0 5%; margin: 0 5% 30px 5%; }
             
+            .about-grid { grid-template-columns: 1fr; padding: 0 8%; }
+            .about-avatar { width: 100%; max-width: 100%; } 
+            
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .frame-image { height: auto; aspect-ratio: 4/3; }
+
+            .hero-gallery { grid-template-columns: 1fr; }
+            
+            /* 修復聯絡連結擠壓問題 */
+            .contact-links { 
+                flex-direction: column; 
+                align-items: flex-end; 
+                gap: 15px; /* 增加間距 */
+            }
+            
+            nav { background: #1a1a1a; padding: 15px 5%; }
+            nav a, nav div { color: white !important; }
+
             .mobile-action-bar {
                 position: fixed; bottom: 0; left: 0; width: 100%;
                 display: grid; grid-template-columns: 1fr 1fr;
@@ -178,8 +257,7 @@
             }
             .mobile-action-bar a { padding: 15px; text-align: center; text-decoration: none; color: #1a1a1a; font-size: 0.9rem; font-weight: 800; }
             .mobile-action-bar a:first-child { border-right: 1px solid #eee; }
-            
-            body { padding-bottom: 100px !important; } 
+            body { padding-bottom: 60px; } 
         }
         @media (min-width: 601px) { .mobile-action-bar { display: none; } }
     </style>
@@ -191,20 +269,38 @@
         <img id="fullscreen-img" src="" alt="Fullscreen View">
     </div>
 
-    <nav>
-        <div style="font-weight: 800; letter-spacing: 2px;">WANG TZU-CHUAN</div>
+    <nav id="navbar">
+        <div style="font-weight: 800; letter-spacing: 2px; font-family: 'Times New Roman', serif;">WANG TZU-CHUAN</div>
         <div style="display: flex; align-items: center;">
             <a href="#about" data-i18n="nav_about">關於</a>
             <a href="#portfolio" data-i18n="nav_portfolio">作品</a>
             <a href="#contact" data-i18n="nav_contact">聯絡</a>
-            <button class="lang-btn" onclick="toggleLanguage()">🌐 English</button>
+            <button class="lang-btn" onclick="toggleLanguage()">🌐 EN/CH</button>
         </div>
     </nav>
 
     <header>
-        <h1 data-i18n="hero_name">王子銓</h1>
-        <p data-i18n="hero_subtitle">正修科技大學 建築科 | AI 學習作品展示</p>
+        <div class="hero-content">
+            <div class="hero-tag">| Architecture Student</div>
+            <h1 class="hero-title">
+                Spatial Thinking<br>
+                <span class="cross">×</span> Digital Tools<br>
+                <span class="cross">×</span> AI Integration
+            </h1>
+            <p class="hero-desc">
+                Explaining the boundaries between physical space and digital intelligence through architectural design.<br>
+                <span style="display:block; margin-top: 8px; font-size: 1rem; opacity: 0.8;">透過建築設計，探索實體空間與數位智能的邊界。</span>
+            </p>
+        </div>
+        <div class="scroll-hint">↓ SCROLL</div>
     </header>
+
+    <div class="section-header-wrap align-left">
+        <div class="stylish-subtitle">EXPLORATION</div>
+        <h2 class="stylish-title">
+            VISUAL<br><strong>FOOTPRINTS</strong>
+        </h2>
+    </div>
 
     <div class="hero-gallery">
         <div class="gallery-item"><img src="hero-1.jpg"><div class="location-tag" data-i18n="hero_loc1">曾經走過的地方：歐洲古蹟</div></div>
@@ -213,30 +309,47 @@
     </div>
 
     <section id="about">
+        <div class="section-header-wrap align-right">
+            <div class="stylish-subtitle" data-i18n="about_title">PROFILE</div>
+            <h2 class="stylish-title">
+                PROFILE &<br><strong>JOURNEY</strong>
+            </h2>
+        </div>
+
         <div class="about-grid">
             <img src="avatar.jpg" class="about-avatar" alt="個人照">
             <div class="about-content">
-                <h2 style="font-size: 2rem; margin-bottom: 10px; color: var(--accent-blue);" data-i18n="about_title">關於我 Profile</h2>
                 <span class="school-info" data-i18n="school_info">目前就讀：正修科技大學 五專部建築科</span>
-                <p data-i18n="about_desc">我是王子銓，在建築、音樂與科技之間尋找平衡。我不斷探索數位工具與 AI 如何優化建築工作流。這份網站不僅是我的作品集，也是我自主學習網頁架設的實踐成果，擅長運用數位工具 (AutoCAD, SketchUp, Illustrator)。</p>
+                <p class="about-desc" data-i18n="about_desc">我是王子銓，在建築、音樂與科技之間尋找平衡。我不斷探索數位工具與 AI 如何優化建築工作流。這份網站不僅是我的作品集，也是我自主學習網頁架設的實踐成果，擅長運用數位工具 (AutoCAD, SketchUp, Illustrator)。</p>
                 <span class="ai-tag" data-i18n="ai_tag">✨ 此網站為 AI 學習與協作之作品</span>
 
                 <div class="timeline-box">
-                    <div class="event-item"><span data-i18n="event_2025">2025 在校成績優異 / 獲得肯定</span><div class="view-btn" onclick="openSliderModal('m2025')" data-i18n="btn_view1">查看 (1張)</div></div>
-                    <div class="event-item"><span data-i18n="event_2024">2024 多項專業第一 / 設計第二</span><div class="view-btn" onclick="openSliderModal('m2024')" data-i18n="btn_view5">查看 (5張)</div></div>
-                    <div class="event-item"><span data-i18n="event_violin">小提琴檢定 10 級通過</span><div class="view-btn" onclick="openSliderModal('m-violin')" data-i18n="btn_cert">查看證書</div></div>
+                    <div class="event-item"><span data-i18n="event_2025">2025 在校成績優異 / 獲得肯定</span><button class="view-btn" onclick="openSliderModal('m2025')" data-i18n="btn_view1">查看</button></div>
+                    <div class="event-item"><span data-i18n="event_2024">2024 多項專業第一 / 設計第二</span><button class="view-btn" onclick="openSliderModal('m2024')" data-i18n="btn_view5">查看</button></div>
+                    <div class="event-item"><span data-i18n="event_violin">小提琴檢定 10 級通過</span><button class="view-btn" onclick="openSliderModal('m-violin')" data-i18n="btn_cert">查看</button></div>
                 </div>
 
                 <div class="skills-box">
-                    <div class="skill-item"><div class="skill-name"><span>AutoCAD / SketchUp</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 95%;"></div></div></div>
-                    <div class="skill-item"><div class="skill-name"><span data-i18n="skill_ai">AI 應用 / 網頁架設</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 90%; background: var(--accent-blue);"></div></div></div>
+                    <div class="skill-item">
+                        <div class="skill-name"><span>AutoCAD / SketchUp / Illustrator</span><span>95%</span></div>
+                        <div class="skill-bar"><div class="skill-fill" style="width: 95%;"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name"><span data-i18n="skill_ai">AI 應用 / 網頁架設</span><span>90%</span></div>
+                        <div class="skill-bar"><div class="skill-fill" style="width: 90%; background: var(--accent-blue);"></div></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="portfolio">
-        <h2 class="section-title" data-i18n="portfolio_title">作品展示 Portfolio</h2>
+        <div class="section-header-wrap align-left">
+            <div class="stylish-subtitle" data-i18n="portfolio_title">PORTFOLIO</div>
+            <h2 class="stylish-title">
+                SELECTED<br><strong>WORKS</strong>
+            </h2>
+        </div>
 
         <div class="filter-container">
             <button class="filter-btn active" onclick="filterPortfolio('all')" data-i18n="filter_all">全部</button>
@@ -320,183 +433,66 @@
 
     </section>
 
-    <div id="p1" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p1_title">時光行</h2><button class="close-btn" onclick="closeSliderModal('p1')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p1-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p1-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p1-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p1', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p1', 1)">&#10095;</button>
-            </div>
-            <p class="modal-desc-footer" data-i18n="p1_desc">前往了解歐洲古文明，旅行模擬現代穿縮過去，讓每站旅行像回到過去，讓人體驗多元豐富的歷史文化。</p>
-        </div>
-    </div>
-
-    <div id="p2" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p2_title">空間體驗進行曲</h2><button class="close-btn" onclick="closeSliderModal('p2')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p2-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p2-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p2-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p2-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p2-5.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p2-6.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p2-7.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p2', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p2', 1)">&#10095;</button>
-            </div>
-            <div class="modal-desc-footer"><p data-i18n="p2_desc">用材質與量體去營造環境氛圍，控制光線，與人視野，讓進入著可以沉醉空間體驗空間。</p><a href="project2.pptx" class="download-btn" download style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" data-i18n="download_ppt">📁 下載專案簡報</a></div>
-        </div>
-    </div>
-
-    <div id="p3" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p3_title">古建築背包客之旅</h2><button class="close-btn" onclick="closeSliderModal('p3')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p3-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p3-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p3-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p3-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p3', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p3', 1)">&#10095;</button>
-            </div>
-            <p class="modal-desc-footer" data-i18n="p3_desc">以人去行走，體驗家鄉風土人情。</p>
-        </div>
-    </div>
-    
-    <div id="p4" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p4_title">AutoCAD之住宅自觀</h2><button class="close-btn" onclick="closeSliderModal('p4')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p4-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p4-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p4-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p4-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p4', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p4', 1)">&#10095;</button>
-            </div>
-            <div class="modal-desc-footer"><p data-i18n="p4_desc">以 AutoCAD 專業工具，自行觀察家中細節製圖輸出。</p><a href="project4.pptx" class="download-btn" download style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 5px; font-weight: bold;" data-i18n="download_ppt">📁 下載專案簡報</a></div>
-        </div>
-    </div>
-    
-    <div id="p5" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p5_title">建築師工作室設計</h2><button class="close-btn" onclick="closeSliderModal('p5')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p5-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p5-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p5-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p5-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p5-5.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p5-6.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p5-7.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p5', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p5', 1)">&#10095;</button>
-            </div>
-            <p class="modal-desc-footer" data-i18n="p5_desc">以休息為主軸，修剪量體，確保每層樓都有休息區域。</p>
-        </div>
-    </div>
-
-    <div id="p6" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p6_title">休憩建築設計</h2><button class="close-btn" onclick="closeSliderModal('p6')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p6-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p6-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p6-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p6-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p6', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p6', 1)">&#10095;</button>
-            </div>
-            <p class="modal-desc-footer" data-i18n="p6_desc">以人為型，以人形發展量體，以需求規劃空間。</p>
-        </div>
-    </div>
-
-    <div id="p7" class="modal">
-        <div class="modal-container">
-            <div class="modal-header"><h2 data-i18n="p7_title">建築設計作品</h2><button class="close-btn" onclick="closeSliderModal('p7')">&times;</button></div>
-            <div class="slider-wrap">
-                <img src="p7-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)">
-                <img src="p7-2.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p7-3.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <img src="p7-4.jpg" class="slider-img" onclick="openFullscreen(this.src)">
-                <button class="nav-arrow prev" onclick="changeSlide('p7', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p7', 1)">&#10095;</button>
-            </div>
-            <p class="modal-desc-footer" data-i18n="p7_desc">建築製圖，建築工程案例臨摹，實務學習。</p>
-        </div>
-    </div>
-
-    <div id="p8" class="modal">
-        <div class="modal-container" style="max-width: 1200px;">
-            <div class="modal-header">
-                <h2 data-i18n="p8_title">團隊協作項目:基地調查</h2>
-                <button class="close-btn" onclick="closeSliderModal('p8')">&times;</button>
-            </div>
-            
-            <div class="slider-wrap" style="height: 70vh; padding-bottom: 0; background: #333;">
-                <iframe src="project8.pdf#toolbar=0&view=FitH" width="100%" height="100%" style="border: none;">
-                    您的瀏覽器不支援 PDF 預覽，請點擊下方按鈕下載查看。
-                </iframe>
-            </div>
-
-            <div class="modal-desc-footer" style="padding: 20px; text-align: left;">
-                <div style="margin-bottom: 15px; border-left: 4px solid var(--accent-blue); padding-left: 10px;">
-                    <p data-i18n="p8_desc" style="margin: 0 0 5px 0;"><strong>設計理念：</strong>周遭範圍之基地調查，分析報告</p>
-                    <p style="margin: 0; color: #555;"><strong>協作者：</strong>廖和風</p>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <a href="https://evacresponse-mqcctmas.manus.space/about" target="_blank" style="text-decoration: none; background-color: #28a745; color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;">
-                        🌐 瀏覽 EvacResponse 網站
-                    </a>
-                    <a href="project8.pdf" download class="download-btn" style="text-decoration: none; background: var(--accent-blue); color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center;" data-i18n="download_ppt">
-                        📁 下載完整 PDF (31頁)
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="m2025" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2025')">&times;</button><h2 data-i18n="honor_2025">2025 榮譽證明</h2><div class="slider-wrap"><img src="2025-award.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div></div>
-    <div id="m2024" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2024')">&times;</button><h2 data-i18n="honor_2024">2024 證明 (5張)</h2><div class="slider-wrap"><img src="2024-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="2024-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-5.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('m2024', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('m2024', 1)">&#10095;</button></div></div></div>
-    <div id="m-violin" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m-violin')">&times;</button><h2 data-i18n="honor_violin">小提琴檢定證書</h2><div class="slider-wrap"><img src="violin-10.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div></div>
-
     <section id="contact">
-        <h2 class="section-title" data-i18n="nav_contact">聯絡我 Contact</h2>
-        <div class="contact-links"><a href="mailto:billwang9088@gmail.com">Email:billwang9088@gmail.com</a><a href="https://www.instagram.com/cr_bt54" target="_blank">Instagram:cr_bt54</a></div>
+        <div class="section-header-wrap align-right">
+            <div class="stylish-subtitle" data-i18n="nav_contact">INQUIRY</div>
+            <h2 class="stylish-title">
+                CONNECT &<br><strong>COLLABORATE</strong>
+            </h2>
+        </div>
+        <div class="contact-links">
+            <a href="mailto:billwang9088@gmail.com">billwang9088@gmail.com</a>
+            <a href="https://www.instagram.com/cr_bt54" target="_blank">Instagram: @cr_bt54</a>
+        </div>
     </section>
 
-    <footer style="padding: 60px 20px; text-align: center; background: #fff; border-top: 1px solid #eee;">
+    <footer>
         <div style="margin-bottom: 15px;">
-            <p style="font-weight: bold; color: var(--primary-dark); font-size: 1.1rem;" data-i18n="footer_school">正修科技大學 五專部建築科</p>
-            <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Kaohsiung, Taiwan | Architecture Student</p>
+            <p style="font-weight: bold; font-size: 1.1rem; color: #1a1a1a;" data-i18n="footer_school">正修科技大學 五專部建築科</p>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Kaohsiung, Taiwan | Architecture Student</p>
         </div>
-
         <div style="margin-bottom: 20px; font-size: 0.95rem; font-weight: 600; color: #555;">
             <span data-i18n="footer_thanks">感謝：和風技術指導</span>
         </div>
-
         <p style="font-size: 0.8rem; color: #bbb; letter-spacing: 1px;">
             &copy; 2026 王子銓 WANG TZU-CHUAN. All Rights Reserved.
         </p>
     </footer>
 
     <div class="mobile-action-bar">
-        <a href="mailto:billwang9088@gmail.com" data-i18n="btn_email">📧 Email 聯絡</a>
+        <a href="mailto:billwang9088@gmail.com" data-i18n="btn_email">📧 Email</a>
         <a href="https://www.instagram.com/cr_bt54" target="_blank" data-i18n="btn_ig">📸 Instagram</a>
     </div>
 
+    <div id="p1" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p1_title">時光行</h2><button class="close-btn" onclick="closeSliderModal('p1')">&times;</button></div><div class="slider-wrap"><img src="p1-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p1-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p1-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p1', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p1', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p1_desc">前往了解歐洲古文明...</p></div></div>
+    <div id="p2" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p2_title">空間體驗進行曲</h2><button class="close-btn" onclick="closeSliderModal('p2')">&times;</button></div><div class="slider-wrap"><img src="p2-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p2-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p2-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p2-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p2-5.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p2-6.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p2-7.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p2', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p2', 1)">&#10095;</button></div><div class="modal-desc-footer"><p data-i18n="p2_desc">用材質與量體...</p><a href="project2.pptx" class="download-btn" download data-i18n="download_ppt">📁 下載專案簡報</a></div></div></div>
+    <div id="p3" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p3_title">古建築背包客之旅</h2><button class="close-btn" onclick="closeSliderModal('p3')">&times;</button></div><div class="slider-wrap"><img src="p3-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p3-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p3-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p3-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p3', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p3', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p3_desc">以人去行走...</p></div></div>
+    <div id="p4" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p4_title">AutoCAD之住宅自觀</h2><button class="close-btn" onclick="closeSliderModal('p4')">&times;</button></div><div class="slider-wrap"><img src="p4-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p4-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p4-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p4-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p4', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p4', 1)">&#10095;</button></div><div class="modal-desc-footer"><p data-i18n="p4_desc">以 AutoCAD 專業工具...</p><a href="project4.pptx" class="download-btn" download data-i18n="download_ppt">📁 下載專案簡報</a></div></div></div>
+    <div id="p5" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p5_title">建築師工作室設計</h2><button class="close-btn" onclick="closeSliderModal('p5')">&times;</button></div><div class="slider-wrap"><img src="p5-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p5-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p5-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p5-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p5-5.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p5-6.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p5-7.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p5', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p5', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p5_desc">以休息為主軸...</p></div></div>
+    <div id="p6" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p6_title">休憩建築設計</h2><button class="close-btn" onclick="closeSliderModal('p6')">&times;</button></div><div class="slider-wrap"><img src="p6-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p6-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p6-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p6-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p6', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p6', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p6_desc">以人為型...</p></div></div>
+    <div id="p7" class="modal"><div class="modal-container"><div class="modal-header"><h2 data-i18n="p7_title">建築設計作品</h2><button class="close-btn" onclick="closeSliderModal('p7')">&times;</button></div><div class="slider-wrap"><img src="p7-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="p7-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p7-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="p7-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('p7', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('p7', 1)">&#10095;</button></div><p class="modal-desc-footer" data-i18n="p7_desc">建築製圖...</p></div></div>
+    <div id="p8" class="modal"><div class="modal-container" style="max-width:1200px;"><div class="modal-header"><h2 data-i18n="p8_title">團隊協作項目</h2><button class="close-btn" onclick="closeSliderModal('p8')">&times;</button></div><div class="slider-wrap" style="height:70vh; background:#333;"><iframe src="project8.pdf#toolbar=0&view=FitH" width="100%" height="100%" style="border:none;">您的瀏覽器不支援 PDF</iframe></div><div class="modal-desc-footer"><p data-i18n="p8_desc">設計理念...</p><a href="project8.pdf" download class="download-btn" data-i18n="download_ppt">📁 下載 PDF</a></div></div></div>
+    
+    <div id="m2025" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2025')">&times;</button><h2 data-i18n="honor_2025">2025 Honor</h2><img src="2025-award.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div>
+    <div id="m2024" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m2024')">&times;</button><h2 data-i18n="honor_2024">2024 Awards</h2><div class="slider-wrap"><img src="2024-1.jpg" class="slider-img active" onclick="openFullscreen(this.src)"><img src="2024-2.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-3.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-4.jpg" class="slider-img" onclick="openFullscreen(this.src)"><img src="2024-5.jpg" class="slider-img" onclick="openFullscreen(this.src)"><button class="nav-arrow prev" onclick="changeSlide('m2024', -1)">&#10094;</button><button class="nav-arrow next" onclick="changeSlide('m2024', 1)">&#10095;</button></div></div></div>
+    <div id="m-violin" class="modal"><div class="modal-container"><button class="close-btn" onclick="closeSliderModal('m-violin')">&times;</button><h2 data-i18n="honor_violin">Violin Cert</h2><img src="violin-10.jpg" class="slider-img active" onclick="openFullscreen(this.src)"></div></div>
+
     <script>
+        // 導覽列滾動變色效果
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) { nav.classList.add('scrolled'); } 
+            else { nav.classList.remove('scrolled'); }
+        });
+
         function openSliderModal(id) { document.getElementById(id).style.display = "block"; document.body.style.overflow = "hidden"; }
         function closeSliderModal(id) { document.getElementById(id).style.display = "none"; document.body.style.overflow = "auto"; }
 
-        // --- 新增：全螢幕放大圖片功能 ---
         function openFullscreen(src) {
-            const modal = document.getElementById('fullscreen-modal');
-            const img = document.getElementById('fullscreen-img');
-            img.src = src;
-            modal.style.display = 'flex';
+            document.getElementById('fullscreen-img').src = src;
+            document.getElementById('fullscreen-modal').style.display = 'flex';
         }
-
-        function closeFullscreen() {
-            document.getElementById('fullscreen-modal').style.display = 'none';
-        }
+        function closeFullscreen() { document.getElementById('fullscreen-modal').style.display = 'none'; }
 
         function changeSlide(modalId, direction) {
             const modal = document.getElementById(modalId);
@@ -513,12 +509,10 @@
             imgs[nextIndex].classList.add('active');
         }
 
-        // --- 分類篩選功能 ---
         function filterPortfolio(category) {
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-
             const items = document.querySelectorAll('.portfolio-item-frame');
             items.forEach(item => {
                 if (category === 'all' || item.getAttribute('data-category') === category) {
@@ -529,22 +523,20 @@
             });
         }
 
-        // --- 語言切換系統 ---
+        // 完整翻譯腳本
         const translations = {
             "zh-TW": {
                 nav_about: "關於", nav_portfolio: "作品", nav_contact: "聯絡",
-                hero_name: "王子銓", hero_subtitle: "正修科技大學 建築科 | AI 學習作品展示",
                 hero_loc1: "曾經走過的地方：歐洲古蹟", hero_loc2: "曾經走過的地方：現代建築", hero_loc3: "曾經走過的地方：歐洲羅馬",
                 about_title: "關於我 Profile",
                 school_info: "目前就讀：正修科技大學 五專部建築科",
                 about_desc: "我是王子銓，在建築、音樂與科技之間尋找平衡。我不斷探索數位工具與 AI 如何優化建築工作流。這份網站不僅是我的作品集，也是我自主學習網頁架設的實踐成果，擅長運用數位工具 (AutoCAD, SketchUp, Illustrator)。",
                 ai_tag: "✨ 此網站為 AI 學習與協作之作品",
                 event_2025: "2025 在校成績優異 / 獲得肯定", event_2024: "2024 多項專業第一 / 設計第二", event_violin: "小提琴檢定 10 級通過",
-                btn_view1: "查看 (1張)", btn_view5: "查看 (5張)", btn_cert: "查看證書",
+                btn_view1: "查看", btn_view5: "查看", btn_cert: "查看證書",
                 skill_ai: "AI 應用 / 網頁架設",
                 portfolio_title: "作品展示 Portfolio",
                 
-                // 分類按鈕翻譯
                 filter_all: "全部", filter_design: "建築設計", filter_drawing: "製圖", filter_poster: "海報設計", filter_presentation: "簡報設計",
 
                 p1_title: "01. 時光行", p1_cat: "建築作品 / 空間體驗", p1_desc: "前往了解歐洲古文明，旅行模擬現代穿縮過去，讓每站旅行像回到過去，讓人體驗多元豐富的歷史文化。",
@@ -562,28 +554,26 @@
                 btn_view_more: "查看更多作品 / View More"
             },
             "en": {
-                nav_about: "About", nav_portfolio: "Portfolio", nav_contact: "Contact",
-                hero_name: "WANG TZU-CHUAN", hero_subtitle: "Cheng Shiu University | Dept. of Architecture | AI Learning Portfolio",
+                nav_about: "PROFILE", nav_portfolio: "WORKS", nav_contact: "CONTACT",
                 hero_loc1: "Places Visited: European Monuments", hero_loc2: "Places Visited: Modern Architecture", hero_loc3: "Places Visited: Rome, Europe",
-                about_title: "Profile",
-                school_info: "Current: Cheng Shiu University, 5-Year Junior College, Architecture Dept.",
+                about_title: "PROFILE",
+                school_info: "Cheng Shiu University | Dept. of Architecture",
                 about_desc: "I am Wang Tzu-Chuan, seeking balance between architecture, music, and technology. I constantly explore how digital tools and AI can optimize architectural workflows. This website is not only my portfolio but also a practical result of my self-learning in web development, utilizing digital tools (AutoCAD, SketchUp, Illustrator).",
                 ai_tag: "✨ Works created with AI learning & collaboration",
-                event_2025: "2025 Academic Excellence / Recognition", event_2024: "2024 1st in Professional / 2nd in Design", event_violin: "Violin Level 10 Certification",
-                btn_view1: "View (1)", btn_view5: "View (5)", btn_cert: "View Cert",
+                event_2025: "2025 Academic Excellence", event_2024: "2024 1st in Professional / 2nd in Design", event_violin: "Violin Level 10 Certification",
+                btn_view1: "VIEW", btn_view5: "VIEW", btn_cert: "VIEW",
                 skill_ai: "AI App / Web Dev",
-                portfolio_title: "Portfolio",
+                portfolio_title: "PORTFOLIO",
 
-                // 分類按鈕翻譯
                 filter_all: "All", filter_design: "Arch. Design", filter_drawing: "Drafting", filter_poster: "Poster Design", filter_presentation: "Presentation",
 
-                p1_title: "01. Journey of Time", p1_cat: "Architecture / Spatial Exp.", p1_desc: "Travel to understand ancient European civilizations. A journey simulating the transition between modern and past, making each stop feel like stepping back in time to experience rich historical cultures.",
-                p2_title: "02. March of Spatial Exp.", p2_cat: "Architecture / Materiality", p2_desc: "Using materials and volumes to create environmental atmosphere, controlling light and vision, allowing entrants to immerse themselves in the spatial experience.",
+                p1_title: "01. Journey of Time", p1_cat: "Architecture / Spatial Exp.", p1_desc: "Travel to understand ancient European civilizations. A journey simulating the transition between modern and past...",
+                p2_title: "02. March of Spatial Exp.", p2_cat: "Architecture / Materiality", p2_desc: "Using materials and volumes to create environmental atmosphere, controlling light and vision...",
                 p3_title: "03. Ancient Arch. Tour", p3_cat: "Architecture / Culture", p3_desc: "Walking as a backpacker to experience the local customs and feelings of the homeland.",
                 p4_title: "04. AutoCAD Residence", p4_cat: "Drafting / Documentation", p4_desc: "Using professional AutoCAD tools to self-observe and document home details for output.",
                 p5_title: "05. Architect Studio", p5_cat: "Architecture / Function", p5_desc: "Focusing on rest as the main axis, pruning volumes to ensure every floor has a relaxation area.",
                 p6_title: "06. Recreational Design", p6_cat: "Architecture / Volume", p6_desc: "Using the human form as a model to develop volumes and planning space based on needs.",
-                p7_title: "07. Design Proposal", p7_cat: "Architecture / Concept", p7_desc: "Design Concept: Explaining the volume combination or material usage of this project, and how it dialogues with the surrounding environment.",
+                p7_title: "07. Design Proposal", p7_cat: "Architecture / Concept", p7_desc: "Design Concept: Explaining the volume combination or material usage of this project.",
                 p8_title: "08. Team Collaboration", p8_cat: "Collab / Practice", p8_desc: "Design Concept: Describing the core thinking of this work.",
                 download_ppt: "📁 Download PPT",
                 honor_2025: "2025 Honors", honor_2024: "2024 Certs (5)", honor_violin: "Violin Certificate",
@@ -601,7 +591,7 @@
             
             // 更新按鈕文字
             const btn = document.querySelector('.lang-btn');
-            btn.innerText = currentLang === 'zh-TW' ? '🌐 English' : '🌐 繁體中文';
+            btn.innerText = currentLang === 'zh-TW' ? '🌐 EN/CH' : '🌐 中/英';
 
             // 更新所有帶有 data-i18n 的元素
             const elements = document.querySelectorAll('[data-i18n]');
